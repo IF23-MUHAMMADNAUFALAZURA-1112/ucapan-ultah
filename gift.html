@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kado Spesial untukmu! ✨</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Great+Vibes&display=swap"
+        rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script> 
+    
+    <style>
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #fce1e1 0%, #ffe9f2 100%);
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .gift-container {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(232, 154, 223, 0.4);
+            max-width: 90%;
+            width: 500px;
+            transform: scale(0.9);
+            animation: fadeInScale 1s ease-out forwards;
+            position: relative;
+            min-height: 400px; /* Tinggi minimum untuk konten */
+        }
+
+        @keyframes fadeInScale {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            color: #ff69b4;
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 5px;
+        }
+
+        .gift-message {
+            font-size: 1.1rem;
+            margin: 20px 0 30px 0;
+            line-height: 1.6;
+        }
+
+        /* Styling untuk kotak kado yang belum dibuka */
+        #giftBoxClosed {
+            font-size: 5rem;
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.1s ease-out, box-shadow 0.5s ease-out; /* Tambah transisi box-shadow */
+        }
+        
+        /* Animasi bergetar awal */
+        .shake-initial {
+            animation: shake 2s infinite;
+        }
+
+        /* Animasi bergetar keras saat diklik */
+        .shake-hard {
+            animation: shakeHard 0.5s ease-out;
+            /* 💥 EFEK BERAPI-API (GLOW ENERGI) */
+            box-shadow: 0 0 15px 5px rgba(255, 105, 180, 0.8), 0 0 30px 10px rgba(255, 192, 203, 0.5); 
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+        @keyframes shakeHard {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            25% { transform: translate(-3px, 0px) rotate(1deg); }
+            50% { transform: translate(3px, 2px) rotate(0deg); }
+            75% { transform: translate(-1px, 2px) rotate(-1deg); }
+            100% { transform: translate(0); }
+        }
+
+        /* Konten Kado (Tersembunyi di awal) */
+        #giftContent {
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+            padding: 20px 0;
+        }
+
+        /* 🎇 EFEK MERIAH PADA JUDUL */
+        #giftContent h2 {
+            color: #ff69b4;
+            text-shadow: 0 0 5px #fff, 0 0 10px #ff69b4;
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+        /* -------------------------- */
+
+        #giftContent img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .cta-button {
+            background-color: #ff69b4; /* Pink Cerah */
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 20px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s ease, transform 0.3s ease; /* Tambah transisi transform */
+        }
+
+        .cta-button:hover {
+            background-color: #e84c98;
+            transform: scale(1.05); /* Sedikit membesar saat hover */
+        }
+        
+        #tapCountDisplay {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .sender {
+            margin-top: 30px;
+            font-style: italic;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <audio class="gift-song" loop autoplay>
+        <source src="./music/arsy.mp3" type="audio/mpeg"> 
+        </source>
+        Aku gak bisa ngasih yang mewah tapi aku harap kamu suka yah
+    </audio>
+    <div class="gift-container">
+        <div id="giftIntro">
+            <h1>Untukmu, Sayangku!</h1>
+            <p class="gift-message">
+                Kado ini terkunci! Ayok ketuk kadonya lebih kuat sayang 
+                untuk membukanya💪
+            </p>
+
+            <span class="gift-box shake-initial" id="giftBoxClosed">
+                🎁
+            </span>
+            <p id="tapCountDisplay">Ketuk: 0 kali</p>
+        </div>
+
+       <div id="giftContent">
+    <h2>🎉 SURPRISE AYANGG 🎉</h2>
+            
+    <img id="kadoImage" src="img/ayang2.jpeg" alt="Foto Kado Spesial">
+            
+    <p class="gift-message" id="kadoMessage">
+        Aku harap kamu suka dengan kado ini, Sayang! 
+        Semua ini untuk merayakan hari spesialmu. 
+        Sekarang, tekan tombol di bawah untuk bilang kamu mau kadonya!
+    </p>
+            
+    <a href="#" class="cta-button" id="whatsappButton">
+         Klaim Kado  ❤️
+    </a>
+</div>
+
+
+        <p class="sender">
+            Dari: Aku Anomali Leo Match
+        </p>
+    </div>
+
+    <script>
+        // =============================================
+        // ⚠️ ATUR KONFIGURASI KADO ANDA DI SINI! ⚠️
+        // =============================================
+        const REQUIRED_TAPS = 50; // Jumlah ketukan yang diperlukan untuk membuka kado
+        
+        // --- KONFIGURASI WHATSAPP ---
+        const YOUR_PHONE_NUMBER = "6283804283745"; // Ganti dengan nomor WhatsApp Anda (tanpa + atau 0 di depan)
+        const WHATSAPP_MESSAGE = "🧕🏻: Sayang, aku terima kado dari kamu tapi apa kamu tidak keberatan nih?";
+        
+        // --- KONFIGURASI GAMBAR & PESAN KADO ---
+        const KADO_IMAGE_URL = "img/ayang2.jpeg"; // Pastikan ini adalah jalur ke gambar kado Anda
+        // =============================================
+        
+        
+        let tapCount = 0;
+        const giftBox = document.getElementById('giftBoxClosed');
+        const tapDisplay = document.getElementById('tapCountDisplay');
+        const giftIntro = document.getElementById('giftIntro');
+        const giftContent = document.getElementById('giftContent');
+        const whatsappButton = document.getElementById('whatsappButton');
+        const kadoImage = document.getElementById('kadoImage');
+        const giftSong = document.querySelector('.gift-song');
+
+        // 🎇 FUNGSI BARU: Efek Kembang Api/Confetti
+        const fireConfetti = () => {
+            if (typeof confetti !== 'undefined') {
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: { y: 0.7 },
+                    colors: ['#ff69b4', '#ffffff', '#e89adf', '#f0f'] // Warna pink cerah
+                });
+
+                // Tembakan kedua untuk lebih meriah
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 100,
+                        spread: 60,
+                        origin: { y: 0.5 },
+                        colors: ['#ff69b4', '#fce1e1'],
+                        scalar: 0.9
+                    });
+                }, 100);
+            }
+        };
+
+
+        // Fungsi untuk membuat tautan WhatsApp
+        const generateWhatsappLink = (number, message) => {
+            const encodedMessage = encodeURIComponent(message);
+            return `https://wa.me/${number}?text=${encodedMessage}`;
+        };
+
+        // Event Listener untuk Kotak Kado
+        giftBox.addEventListener('click', () => {
+            if (tapCount < REQUIRED_TAPS) {
+                tapCount++;
+                tapDisplay.innerText = `Ketuk: ${tapCount} kali`;
+                
+                // Mainkan audio setelah interaksi pertama
+                if (tapCount === 1 && giftSong && giftSong.paused) {
+                    giftSong.play().catch(e => console.log("Autoplay diblokir", e));
+                }
+
+                // Animasi getar keras + Efek Glow "Berapi-api"
+                giftBox.classList.add('shake-hard');
+                setTimeout(() => {
+                    giftBox.classList.remove('shake-hard');
+                }, 500);
+                
+                // 💥 BONUS: Konfeti kecil saat hampir terbuka
+                if (tapCount > REQUIRED_TAPS * 0.8 && tapCount % 5 === 0) {
+                     if (typeof confetti !== 'undefined') {
+                        confetti({
+                            particleCount: 15,
+                            spread: 30,
+                            origin: { y: 0.6, x: Math.random() },
+                            colors: ['#ff69b4'],
+                            scalar: 0.7
+                        });
+                    }
+                }
+
+
+                if (tapCount === REQUIRED_TAPS) {
+                    openGift();
+                }
+            }
+        });
+
+        // Fungsi Pembukaan Kado
+        const openGift = () => {
+            giftBox.classList.remove('shake-initial'); // Hentikan getaran awal
+            giftBox.classList.remove('shake-hard'); // Pastikan glow hilang
+
+            // 🎇 PANGGIL EFEK MERIAH SEBELUM KADO TERBUKA
+            fireConfetti(); 
+
+            // 1. Sembunyikan intro kado
+            giftIntro.style.opacity = '0';
+            setTimeout(() => {
+                giftIntro.style.display = 'none';
+
+                // 2. Isi konten kado
+                kadoImage.src = KADO_IMAGE_URL;
+                whatsappButton.href = generateWhatsappLink(YOUR_PHONE_NUMBER, WHATSAPP_MESSAGE);
+
+                // 3. Tampilkan konten kado dengan fade-in
+                giftContent.style.display = 'block';
+                setTimeout(() => {
+                    giftContent.style.opacity = '1';
+                }, 50); // Delay kecil untuk transisi
+                
+            }, 500);
+        };
+        
+        // Animasi agar kado muncul setelah loading
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.style.opacity = '1';
+        });
+    </script>
+</body>
+
+</html>
